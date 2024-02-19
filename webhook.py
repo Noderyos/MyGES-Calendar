@@ -31,6 +31,7 @@ h = {
 
 url = 'https://ges-cas.kordis.fr/login?service=https://myges.fr/j_spring_cas_security_check'
 calendar_url = 'https://myges.fr/student/planning-calendar'
+home_page = 'https://myges.fr/student/home'
 login_url = 'https://ges-cas.kordis.fr/login'
 
 login_page = session.get(url).text
@@ -42,7 +43,10 @@ data["password"] = config["password"]
 data["submit"] = "CONNEXION"
 
 
-session.post(login_url, data=data, headers=h)
+login_req = session.post(login_url, data=data, headers=h)
+
+if login_req.url != home_page:        # MYGES IS A PIECE OF SHIT AND SOMETIMES DONT REDIRECT TO HOME PAGE 
+    session.get(home_page, headers=h)
 
 calendar_page = session.get(calendar_url, headers=h).text
 
